@@ -1,7 +1,7 @@
 #include "NanoBrowserWindow.h"
 #include "NanoCefClient.h"
 
-using namespace std::literals;
+using namespace std::string_literals;
 
 static constexpr const char* wndClassName = "$client - window$";
 static CefRefPtr<NanoCefClient> pClient;
@@ -11,7 +11,7 @@ LRESULT CALLBACK BrowserWindowWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 	switch (msg) 
 	{
 	case WM_CREATE: 
-{
+	{
 		pClient = new NanoCefClient{};
 
 		RECT rect{};
@@ -24,7 +24,7 @@ LRESULT CALLBACK BrowserWindowWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 
 		CefWindowInfo info;
 		info.SetAsChild(hWnd, cefRect);
-		CefBrowserHost::CreateBrowser(info, pClient, "https://disk/index.html"s, {}, {}, {});																						
+		CefBrowserHost::CreateBrowser(info, pClient, "http://disk/index.html"s, {}, {}, {});
 		break;
 	}
 	case WM_SIZE:

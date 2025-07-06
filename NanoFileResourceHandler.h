@@ -9,22 +9,39 @@ class NanoFileResourceHandler : public CefResourceHandler
 {
 public:
 	bool Open(
-		CefRefPtr<CefRequest> request,
+		CefRefPtr<CefRequest> pRequest,
 		bool& handleRequest,
 		CefRefPtr<CefCallback> pCallback) override
 	{
 		handleRequest = true;
 
 		CefURLParts urlParts;
-		if (!CefParseURL(request->GetURL(), urlParts)) 
+		//
+		//MessageBoxA(nullptr, path.string().c_str(), "Resolved Path", MB_OK);
+		//// file size is needed later to populate the response header when requested
+		//fileSize_ = (int64_t)std::filesystem::file_size(path);
+		//// extension is needed later for mime type in the response headers
+		//auto ext = path.extension().string();
+		//ext.erase(std::remove(ext.begin(), ext.end(), '.'), ext.end());
+		//if (!ext.empty()) 
+		//{
+		//	fileMimeType_ = CefGetMimeType(ext);
+		//}
+		//// open the file, success if file is trueish
+		//fileStream_ = std::ifstream{ path, std::ios::binary };
+		//return bool(fileStream_);
+
+
+
+		if (!CefParseURL(pRequest->GetURL(), urlParts)) 
 		{
 			MessageBoxA(nullptr, "Invalid URL in request.", "Request Error", MB_ICONERROR);
 			return false;
 		}
-
+		
 		try 
 		{
-			const std::string rawPath = CefString(&urlParts.path);
+			const std::string rawPath = CefString(&urlParts.path).ToString();
 			if (rawPath.empty()) 
 			{
 				MessageBoxA(nullptr, "Empty request path.", "Request Error", MB_ICONERROR);
@@ -32,29 +49,20 @@ public:
 			}
 
 			// Sanitize and resolve path
-			auto path = std::filesystem::path{ rawPath }.lexically_normal().relative_path();
-			const std::filesystem::path rootDir = "webroot";
-			const std::filesystem::path fullPath = std::filesystem::weakly_canonical(rootDir / path);
-
-			// Restrict to webroot directory
-			if (fullPath.string().find(std::filesystem::canonical(rootDir).string()) != 0) 
-			{
-				MessageBoxA(nullptr, "Blocked path traversal attempt.", "Security Warning", MB_ICONWARNING);
-				return false;
-			}
-
+			const auto fullPath = std::filesystem::path{ rawPath }.relative_path();
+			
 			// Verify file exists and is regular file
 			if (!std::filesystem::exists(fullPath) || !std::filesystem::is_regular_file(fullPath)) 
 			{
 				MessageBoxA(nullptr, ("File not found:\n" + fullPath.string()).c_str(), "Request Error", MB_ICONERROR);
 				return false;
 			}
-
+			
 			// Store size and MIME type
 			fileSize_ = (int64_t)std::filesystem::file_size(fullPath);
 			auto ext = fullPath.extension().string();
 			ext.erase(std::remove(ext.begin(), ext.end(), '.'), ext.end());
-
+			
 			if (!ext.empty())
 			{
 				fileMimeType_ = CefGetMimeType(ext);
@@ -82,7 +90,7 @@ public:
 		int64_t& responseLength,
 		CefString& redirectUrl) override
 	{
-		if(!fileMimeType_.empty())
+		if(!fileMimeType_.empty()) 
 		{
 			pResponse->SetMimeType(fileMimeType_);
 		}
@@ -91,19 +99,20 @@ public:
 	}
 	void Cancel() override {}
 	bool Read(
-		void* dataOut,
+		void* pDataOut,
 		int bytesToRead,
 		int& bytesRead,
 		CefRefPtr<CefResourceReadCallback> pCallback) override
 	{
 		//if we don't have an out buffer, that's a problem
-		if(!dataOut) 
+		if (!pDataOut) 
 		{
 			bytesRead = -2;
 			return false;
 		}
+
 		//attempt to read up to bytesToRead
-		fileStream_.read(static_cast<char*>(dataOut), bytesToRead);
+		fileStream_.read(static_cast<char*>(pDataOut), bytesToRead);
 
 		//gcout() is how many bytes we actually got during the last read
 		bytesRead = (int)fileStream_.gcount();
