@@ -17,7 +17,6 @@
 mono_crash.*
 
 # Build results
-cef_cache/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -98,7 +97,6 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
-*.dll
 
 # Chutzpah Test files
 _Chutzpah*
@@ -364,6 +362,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+cef_cache/
 include/
 libcef.lib
 libcef_dll_wrapper.lib
+libcef.dll
+chrome_elf.dll
