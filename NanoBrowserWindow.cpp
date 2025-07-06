@@ -23,8 +23,8 @@ LRESULT CALLBACK BrowserWindowWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 		cefRect.height = rect.bottom - rect.top;
 
 		CefWindowInfo info;
-		info.SetAsChild(hWnd, cefRect);																					 //4.Error check
-		CefBrowserHost::CreateBrowser(info, pClient, "https://youtube.com"s, {}, {}, {});																						
+		info.SetAsChild(hWnd, cefRect);
+		CefBrowserHost::CreateBrowser(info, pClient, "https://disk/index.html"s, {}, {}, {});																						
 		break;
 	}
 	case WM_SIZE:
@@ -37,7 +37,7 @@ LRESULT CALLBACK BrowserWindowWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 					RECT rect{};
 					GetClientRect(hWnd, &rect);
 					SetWindowPos(hWndBrowser, NULL, rect.left, rect.top, 
-						rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
+					rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
 				}
 			}
 		}
