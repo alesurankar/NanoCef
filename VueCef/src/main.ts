@@ -8,6 +8,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { createVuetify } from 'vuetify'
 import { md2 } from 'vuetify/blueprints'
+import router from './router/router'
 
 const vuetify = createVuetify({
     blueprint: md2,
@@ -18,4 +19,7 @@ const vuetify = createVuetify({
 
 const app = createApp(App)
 
-app.use(vuetify).mount('#app')
+app
+    .use(vuetify)
+    .use(router) 
+    .mount('#app')

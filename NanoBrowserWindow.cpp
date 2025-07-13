@@ -84,7 +84,7 @@ HWND CreateBrowserWindow(HINSTANCE hInstance)
 
 	hWndBrowser = CreateWindowExA(
 		0, wndClassName, "Nano CEF",
-		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, 200, 20,
+		WS_POPUP | WS_CLIPCHILDREN, 200, 20,
 		1360, 1020, nullptr, nullptr, hInstance, nullptr
 	);
 	if (!hWndBrowser)                                                           
