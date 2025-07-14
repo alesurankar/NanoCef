@@ -45,6 +45,32 @@ function removeItem(i: number)
 const grandTotal = computed(() =>
   entries.value.reduce((sum, entry) => sum + entry.item.price * entry.quantity, 0)
 )
+const mb = ref<boolean|null>(null)
+function doit()
+{
+  interface MyApi
+  {
+    doVersion(text: string): number;
+  }
+  const myApi = window as unknown as MyApi;
+  try 
+  {
+    const result = myApi.doVersion("ayyyyy yo");
+    if (result === 6) 
+    {
+      mb.value = true;  // YES
+    } else if (result === 7) 
+    {
+      mb.value = false; // NO
+    } else 
+    {
+      mb.value = null;  // CANCEL or unknown
+    }
+  } catch (e) 
+  {
+    mb.value = null;
+  }
+}
 </script>
 
 <template>
@@ -62,7 +88,7 @@ const grandTotal = computed(() =>
             <v-col cols="7">
               <v-autocomplete
                 color="primary"
-                variants="outlined"
+                variant="outlined"
                 density="compact"
                 hide-details
                 :items="inventory"
@@ -74,7 +100,7 @@ const grandTotal = computed(() =>
             <v-col cols="2">
               <v-number-input
                 color="primary"
-                variants="outlined"
+                variant="outlined"
                 density="compact"
                 hide-details
                 control-variant="stacked"
@@ -97,6 +123,10 @@ const grandTotal = computed(() =>
         </v-card>
         <div class="d-flex justify-end">
           <v-btn icon="mdi-plus" color="purple" @click="addItem"></v-btn>
+        </div>
+        <div class="d-flex justify-end">
+          <v-btn color="green" @click="doit">AYY</v-btn>
+          <p class="price">{{ mb ? 'YES' : mb !== null ? 'NO' : 'null' }}</p>
         </div>
       </v-container>
     </v-main>
