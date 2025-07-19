@@ -31,11 +31,12 @@
         <div style="width: 220px; background-color: #1e1e1e;">
           <v-toolbar flat density="compact">
             <v-toolbar-title class="text-white">Navigation</v-toolbar-title>
+            <v-btn>Add</v-btn>
           </v-toolbar>
           <v-divider></v-divider>
-          <v-btn block to="/">Home</v-btn>
-          <v-btn block to="/cart">Cart</v-btn>
-          <v-btn block to="/sds">Spacer_divider_sheet</v-btn>
+          <v-btn color="red" block to="/">Home</v-btn>
+          <v-btn block to="/chart">Chart</v-btn>
+          <v-btn block to="/drs">Dice_roll_simulator</v-btn>
         </div>
         <div class="flex-grow-1 pa-4">
           <router-view />

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="bg-red">
-    <h1>Shopping Cart</h1>
+    <h1>Chart</h1>
     <v-container class="bg-indigo-lighten-2 text-teal-darken-4  text-uppercase pl-12 ml-4 elevation-10 rounded-circle" >Colored container</v-container>
     <v-row></v-row>
   </v-container>
