@@ -1,60 +1,79 @@
-<script setup lang="ts">
+<script setup>
+  import { ref, watch } from 'vue'
 
+  const items = [
+    { title: 'Home', value: '/', icon: 'mdi-home' },
+    { title: 'Chart', value: 'chart', icon: 'mdi-chart-bar' },
+    {
+      title: 'Dice_roll_simulator',
+      value: 'drs',
+    },
+    {
+      title: 'learnVue',
+      value: 'learnVue',
+    },
+    {
+      title: 'Test_VUE_2',
+      value: 'Test_VUE_2',
+    },
+  ]
+
+  const drawer = ref(false)
+  const group = ref(null)
+
+  watch(group, () => {
+    drawer.value = false
+  })
 </script>
+
+
 <template>
-  <v-app>
-    <v-app-bar app style="-webkit-app-region: drag; user-select: none;">
-      <v-toolbar-title>My App</v-toolbar-title>
-      <v-btn icon style="-webkit-app-region: no-drag;">
-        <v-icon>mdi-content-cut</v-icon>
-      </v-btn>
-      <v-btn icon style="-webkit-app-region: no-drag;">
-        <v-icon color="red">mdi-axis-arrow-lock</v-icon>
-      </v-btn>
-      <v-spacer />
-      <v-btn icon class="rounded-0" style="width: 40px; height: 40px; -webkit-app-region: no-drag;">
-        <v-icon>mdi-window-minimize</v-icon>
-      </v-btn>
-      <v-btn icon style="-webkit-app-region: no-drag;">
-        <v-icon>mdi-window-minimize</v-icon>
-      </v-btn>
-      <v-btn icon style="-webkit-app-region: no-drag;">
-        <v-icon>mdi-window-maximize</v-icon>
-      </v-btn>
-      <v-btn icon style="-webkit-app-region: no-drag;">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
+<v-card>
+  <v-layout>
+    <v-app-bar flat height="32" class="app-title-bar" color="background">
+      <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>My files</v-toolbar-title>
+      <template v-if="$vuetify.display.mdAndUp">
+        <v-btn icon class="rounded-0" style="-webkit-app-region: no-drag;">
+          <v-icon size="18">mdi-window-minimize</v-icon>
+        </v-btn>
+        <v-btn icon class="rounded-0" style="-webkit-app-region: no-drag;">
+          <v-icon size="18">mdi-window-maximize</v-icon>
+        </v-btn>
+        <v-btn icon class="rounded-0" style="-webkit-app-region: no-drag;">
+          <v-icon size="18">mdi-close</v-icon>
+        </v-btn>
+      </template>
     </v-app-bar>
-
-    <v-main>
-      <v-container fluid class="d-flex pa-0" style="height: calc(80vh - 48px - 32px);">
-        <div style="width: 220px; background-color: #1e1e1e;">
-          <v-toolbar flat density="compact">
-            <v-toolbar-title class="text-white">Navigation</v-toolbar-title>
-            <v-btn>Add</v-btn>
-          </v-toolbar>
-          <v-divider></v-divider>
-          <v-btn color="red" block to="/">Home</v-btn>
-          <v-btn block to="/chart">Chart</v-btn>
-          <v-btn block to="/drs">Dice_roll_simulator</v-btn>
-        </div>
-        <div class="flex-grow-1 pa-4">
-          <router-view />
-        </div>
-      </v-container>
+    <v-navigation-drawer
+        v-model="drawer"
+        :location="$vuetify.display.mobile ? 'left' : undefined"
+        temporary
+      ><v-list nav>
+        <v-list-item
+          v-for="item in items"
+          :key="item.value"
+          :to="`/${item.value}`"
+          link
+          @click="drawer = false"
+          exact
+          >
+          <v-list-item-icon v-if="item.icon">
+          <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-main style="height: 500px;">
+      <v-card-text>
+        <router-view />
+      </v-card-text>
     </v-main>
-
-    <v-footer app>
+    
+<v-footer app>
       <span>&copy; 2025</span>
     </v-footer>
-  </v-app>
+  </v-layout>
+</v-card>
 </template>
-
-<style scoped>
-.price
-{
-  font-size: 20px;
-  font-weight: bold;
-  padding-right: 20px;
-}
-</style>
