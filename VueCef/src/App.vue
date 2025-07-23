@@ -16,6 +16,10 @@
       title: 'Test_VUE_2',
       value: 'Test_VUE_2',
     },
+    {
+      title: 'test2',
+      value: 'test2',
+    },
   ]
 
   const drawer = ref(false)
@@ -28,8 +32,7 @@
 
 
 <template>
-<v-card>
-  <v-layout>
+  <v-app>
     <v-app-bar flat height="32" class="app-title-bar" color="background">
       <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>My files</v-toolbar-title>
@@ -67,13 +70,14 @@
     </v-navigation-drawer>
     <v-main style="height: 500px;">
       <v-card-text>
-        <router-view />
+        <v-fade-transition>
+          <router-view />
+        </v-fade-transition>
       </v-card-text>
     </v-main>
     
-<v-footer app>
+    <v-footer app>
       <span>&copy; 2025</span>
     </v-footer>
-  </v-layout>
-</v-card>
+  </v-app>
 </template>
