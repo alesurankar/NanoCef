@@ -1,18 +1,18 @@
 #include "NanoBrowserWindow.h"
 #include "NanoCefClient.h"
 
-using namespace std::string_literals;
+using namespace std::literals;
 
 static constexpr const char* wndClassName = "$client - window$";
 static CefRefPtr<NanoCefClient> pClient;
 
 LRESULT CALLBACK BrowserWindowWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (msg) 
+	switch (msg)
 	{
-	case WM_CREATE: 
+	case WM_CREATE:
 	{
-		pClient = new NanoCefClient{hWnd};
+		pClient = new NanoCefClient{};
 
 		RECT rect{};
 		GetClientRect(hWnd, &rect);
@@ -23,34 +23,31 @@ LRESULT CALLBACK BrowserWindowWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 		cefRect.height = rect.bottom - rect.top;
 
 		CefWindowInfo info;
-		info.SetAsChild(hWnd, cefRect);
-		CefBrowserHost::CreateBrowser(info, pClient, "http://localhost:5173/"s, {}, {}, {});
-
-		// Post WM_SIZE to resize browser after creation is complete
-		PostMessage(hWnd, WM_SIZE, 0, 0);
+		info.SetAsChild(hWnd, cefRect);																					 //4.Error check
+		CefBrowserHost::CreateBrowser(info, pClient, "https://youtube.com"s, {}, {}, {});
 		break;
 	}
 	case WM_SIZE:
-		if (wParam != SIZE_MINIMIZED && pClient) 
+		if (wParam != SIZE_MINIMIZED && pClient)
 		{
-			if (auto pBrowser = pClient->GetBrowser()) 
+			if (auto pBrowser = pClient->GetBrowser())
 			{
-				if (auto hWndBrowser = pBrowser->GetHost()->GetWindowHandle()) 
+				if (auto hWndBrowser = pBrowser->GetHost()->GetWindowHandle())
 				{
 					RECT rect{};
 					GetClientRect(hWnd, &rect);
-					SetWindowPos(hWndBrowser, NULL, rect.left, rect.top, 
-					rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
+					SetWindowPos(hWndBrowser, NULL, rect.left, rect.top,
+						rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
 				}
 			}
 		}
 		break;
 	case WM_ERASEBKGND:
-		if (pClient) 
+		if (pClient)
 		{
-			if (auto pBrowser = pClient->GetBrowser()) 
+			if (auto pBrowser = pClient->GetBrowser())
 			{
-				if (pBrowser->GetHost()->GetWindowHandle()) 
+				if (pBrowser->GetHost()->GetWindowHandle())
 				{
 					return 1;
 				}
@@ -76,22 +73,22 @@ HWND CreateBrowserWindow(HINSTANCE hInstance)
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wcex.lpszClassName = wndClassName;
-	if (!RegisterClassExA(&wcex))                                                
-	{																			 
-		MessageBoxA(nullptr, "RegisterClassExA failed!", "Error", MB_ICONERROR); 
-		return nullptr;															 
-	}																			 
+	if (!RegisterClassExA(&wcex))
+	{
+		MessageBoxA(nullptr, "RegisterClassExA failed!", "Error", MB_ICONERROR);
+		return nullptr;
+	}
 
 	hWndBrowser = CreateWindowExA(
 		0, wndClassName, "Nano CEF",
-		WS_POPUP | WS_CLIPCHILDREN, 200, 20,
+		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, 200, 20,
 		1360, 1020, nullptr, nullptr, hInstance, nullptr
 	);
-	if (!hWndBrowser)                                                           
-	{																			
-		MessageBoxA(nullptr, "CreateWindowExA failed!", "Error", MB_ICONERROR);	
-		return nullptr;															
-	}																			
+	if (!hWndBrowser)
+	{
+		MessageBoxA(nullptr, "CreateWindowExA failed!", "Error", MB_ICONERROR);
+		return nullptr;
+	}
 
 	ShowWindow(hWndBrowser, SW_SHOWDEFAULT);
 	UpdateWindow(hWndBrowser);

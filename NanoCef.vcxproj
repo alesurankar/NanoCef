@@ -146,8 +146,6 @@
     <ClInclude Include="NanoBrowserWindow.h" />
     <ClInclude Include="NanoCefApp.h" />
     <ClInclude Include="NanoCefClient.h" />
-    <ClInclude Include="NanoFileResourceHandler.h" />
-    <ClInclude Include="NanoFileSchemeHandlerFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="compatibility.manifest" />

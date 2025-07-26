@@ -16,18 +16,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	CefSettings settings;
 	settings.multi_threaded_message_loop = true;
-	settings.no_sandbox = true;
 	CefString(&settings.cache_path).FromString((std::filesystem::current_path() / "cef_cache"s).string());
-	if (!CefInitialize(mainArgs, settings, pApp, nullptr))					      
-	{																			
+	if (!CefInitialize(mainArgs, settings, pApp, nullptr))
+	{
 		MessageBoxA(nullptr, "CEF Initialization failed", "Error", MB_ICONERROR);
-		return -1;																
-	}																		
+		return -1;
+	}
 
 	CreateBrowserWindow(hInstance);
 
 	MSG msg;
-	while (GetMessageA(&msg, nullptr, 0, 0)) 
+	while (GetMessageA(&msg, nullptr, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);
